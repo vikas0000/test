@@ -1,26 +1,36 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Contacts from './Components/Contacts';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+  state = {
+    contacts: [],
+    lists: []
+  }
+
+  componentDidMount() {
+
+    Promise.all([
+    fetch('https://jsonplaceholder.typicode.com/users').then(res => res.json()),
+    fetch('https://jsonplaceholder.typicode.com/posts?userId=1').then(res => res.json()),
+    ])
+    .then((data) => {
+      this.setState({ 
+        contacts: data[0],
+        lists: data[1]
+       })
+    })
+    .catch(console.log)
+  }
+  render() {
+    return (
+      <div className="App">
+      <Contacts contacts={this.state.contacts} />,
+      {/* <Lists lists={this.state.lists} /> */}
+      </div>
+    );
+  }
 }
 
 export default App;
